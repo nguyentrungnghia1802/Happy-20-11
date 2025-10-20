@@ -1,0 +1,626 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Playfair Display', serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* Welcome Screen */
+.welcome-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    color: white;
+    position: relative;
+    z-index: 10;
+}
+
+.welcome-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    animation: fadeInUp 1s ease-out;
+}
+
+.welcome-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+.start-btn {
+    padding: 15px 40px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    animation: fadeInUp 1s ease-out 0.6s both;
+}
+
+.start-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    background: linear-gradient(45deg, #ee5a24, #ff6b6b);
+}
+
+/* Game Screen */
+.game-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative;
+    z-index: 10;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Falling Numbers */
+.falling-numbers {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.number {
+    position: absolute;
+    font-size: 4rem;
+    font-weight: bold;
+    color: #ff6b6b;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    cursor: grab;
+    pointer-events: all;
+    user-select: none;
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+
+.number:active {
+    cursor: grabbing;
+    transform: scale(1.1);
+}
+
+.number.dragging {
+    z-index: 1000;
+    transform: scale(1.2);
+    opacity: 0.8;
+}
+
+.falling {
+    animation: fall 3s ease-in-out infinite;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(calc(100vh + 100px)) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Date Container */
+.date-container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.date-slots {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.slot {
+    width: 80px;
+    height: 80px;
+    border: 3px dashed rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    font-weight: bold;
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.slot.highlight {
+    border-color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.2);
+    transform: scale(1.05);
+}
+
+.slot.filled {
+    border-style: solid;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.slot.correct {
+    animation: slotGlow 2s ease-in-out;
+}
+
+@keyframes slotGlow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(255, 107, 107, 1);
+        transform: scale(1.1);
+    }
+}
+
+.dash {
+    font-size: 3rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.instruction {
+    text-align: center;
+    color: white;
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Celebration Screen */
+.celebration-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    color: white;
+    position: relative;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+}
+
+/* Fire Animation */
+.fire-animation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.flame {
+    position: absolute;
+    background: radial-gradient(circle, #ff6b6b 0%, #ee5a24 50%, transparent 70%);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: flicker 0.5s ease-in-out infinite alternate;
+}
+
+.flame1 {
+    width: 100px;
+    height: 150px;
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.flame2 {
+    width: 80px;
+    height: 120px;
+    top: 30%;
+    right: 15%;
+    animation-delay: 0.1s;
+}
+
+.flame3 {
+    width: 60px;
+    height: 90px;
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 0.2s;
+}
+
+.flame4 {
+    width: 90px;
+    height: 130px;
+    bottom: 30%;
+    right: 10%;
+    animation-delay: 0.3s;
+}
+
+.flame5 {
+    width: 70px;
+    height: 100px;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    animation-delay: 0.4s;
+}
+
+@keyframes flicker {
+    0% {
+        transform: scale(1) rotate(-2deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1.1) rotate(2deg);
+        opacity: 1;
+    }
+}
+
+/* Rose */
+.rose-container {
+    position: relative;
+    z-index: 10;
+    animation: roseAppear 2s ease-out 2s both;
+}
+
+.rose {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 20px;
+}
+
+.rose-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    background: radial-gradient(circle, #c0392b, #e74c3c);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+.petal {
+    position: absolute;
+    background: radial-gradient(ellipse, #e74c3c, #c0392b);
+    border-radius: 50% 10% 50% 10%;
+}
+
+.petal1 {
+    width: 60px;
+    height: 80px;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) rotate(0deg);
+}
+
+.petal2 {
+    width: 60px;
+    height: 80px;
+    top: 30px;
+    right: 30px;
+    transform: rotate(45deg);
+}
+
+.petal3 {
+    width: 60px;
+    height: 80px;
+    top: 60px;
+    right: 10px;
+    transform: rotate(90deg);
+}
+
+.petal4 {
+    width: 60px;
+    height: 80px;
+    bottom: 30px;
+    right: 30px;
+    transform: rotate(135deg);
+}
+
+.petal5 {
+    width: 60px;
+    height: 80px;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) rotate(180deg);
+}
+
+.petal6 {
+    width: 60px;
+    height: 80px;
+    bottom: 30px;
+    left: 30px;
+    transform: rotate(225deg);
+}
+
+.petal7 {
+    width: 60px;
+    height: 80px;
+    top: 60px;
+    left: 10px;
+    transform: rotate(270deg);
+}
+
+.petal8 {
+    width: 60px;
+    height: 80px;
+    top: 30px;
+    left: 30px;
+    transform: rotate(315deg);
+}
+
+.stem {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    width: 8px;
+    height: 60px;
+    background: linear-gradient(to bottom, #27ae60, #2ecc71);
+    transform: translateX(-50%);
+    border-radius: 4px;
+}
+
+.leaf {
+    position: absolute;
+    background: linear-gradient(45deg, #27ae60, #2ecc71);
+    border-radius: 0 100% 0 100%;
+}
+
+.leaf1 {
+    width: 30px;
+    height: 20px;
+    bottom: -20px;
+    left: 60%;
+    transform: rotate(30deg);
+}
+
+.leaf2 {
+    width: 25px;
+    height: 15px;
+    bottom: -30px;
+    left: 40%;
+    transform: rotate(-30deg);
+}
+
+@keyframes roseAppear {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) translateY(50px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Message */
+.message {
+    position: relative;
+    z-index: 10;
+    max-width: 600px;
+    margin: 0 auto;
+    animation: messageAppear 1s ease-out 3s both;
+}
+
+.celebration-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #ff6b6b;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.celebration-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    opacity: 0.9;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+@keyframes messageAppear {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Sparkles */
+.sparkles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.sparkle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+.sparkle1 { top: 20%; left: 10%; animation-delay: 0s; }
+.sparkle2 { top: 30%; right: 20%; animation-delay: 0.3s; }
+.sparkle3 { top: 60%; left: 15%; animation-delay: 0.6s; }
+.sparkle4 { bottom: 40%; right: 10%; animation-delay: 0.9s; }
+.sparkle5 { top: 80%; left: 30%; animation-delay: 1.2s; }
+.sparkle6 { top: 40%; right: 30%; animation-delay: 1.5s; }
+.sparkle7 { bottom: 20%; left: 60%; animation-delay: 1.8s; }
+.sparkle8 { top: 70%; right: 50%; animation-delay: 2.1s; }
+
+@keyframes sparkle {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .welcome-title {
+        font-size: 2.5rem;
+    }
+    
+    .welcome-subtitle {
+        font-size: 1rem;
+        padding: 0 20px;
+    }
+    
+    .date-container {
+        padding: 20px;
+        margin: 0 20px;
+    }
+    
+    .date-slots {
+        gap: 10px;
+    }
+    
+    .slot {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+    }
+    
+    .dash {
+        font-size: 2rem;
+    }
+    
+    .number {
+        font-size: 3rem;
+    }
+    
+    .instruction {
+        font-size: 1rem;
+        padding: 0 20px;
+    }
+    
+    .rose {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .petal {
+        width: 45px;
+        height: 60px;
+    }
+    
+    .celebration-title {
+        font-size: 2rem;
+    }
+    
+    .celebration-text {
+        font-size: 1rem;
+        padding: 0 20px;
+    }
+    
+    .message {
+        padding: 0 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-title {
+        font-size: 2rem;
+    }
+    
+    .date-slots {
+        gap: 8px;
+    }
+    
+    .slot {
+        width: 50px;
+        height: 50px;
+        font-size: 1.8rem;
+    }
+    
+    .dash {
+        font-size: 1.8rem;
+    }
+    
+    .number {
+        font-size: 2.5rem;
+    }
+    
+    .rose {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .petal {
+        width: 35px;
+        height: 45px;
+    }
+    
+    .celebration-title {
+        font-size: 1.8rem;
+    }
+    
+    .celebration-text {
+        font-size: 0.9rem;
+    }
+}

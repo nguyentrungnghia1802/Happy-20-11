@@ -1,0 +1,34 @@
+{
+  "name": "womens-day-vietnam-2010",
+  "version": "1.0.0",
+  "description": "Interactive website to celebrate Vietnamese Women's Day 20-10",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server --port=3000",
+    "dev": "live-server --port=3000 --watch=.",
+    "build": "echo 'Static site - no build needed'",
+    "serve": "python -m http.server 8000"
+  },
+  "keywords": [
+    "vietnamese-womens-day",
+    "20-10",
+    "interactive",
+    "game",
+    "celebration",
+    "responsive",
+    "web-app"
+  ],
+  "author": "Developer",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "."
+  },
+  "bugs": {
+    "url": "."
+  },
+  "homepage": "."
+}
