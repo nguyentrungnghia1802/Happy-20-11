@@ -229,15 +229,27 @@ class WomensDay2010Game {
         // Play success sound
         this.playSound(this.successSound);
         
-        // Add glow effect to slots
-        this.slots.forEach(slot => {
-            slot.classList.add('correct');
+        // Add glow effect to slots with staggered timing
+        this.slots.forEach((slot, index) => {
+            setTimeout(() => {
+                slot.classList.add('correct');
+                // Play individual slot sound effect
+                this.playSound(this.dropSound);
+            }, index * 200);
         });
         
-        // After 2 seconds, show fire effect and transition to celebration
+        // Add screen flash effect
+        this.createScreenFlash();
+        
+        // Add explosion effect
+        setTimeout(() => {
+            this.createExplosionEffect();
+        }, 1000);
+        
+        // After 3 seconds, show fire effect and transition to celebration
         setTimeout(() => {
             this.showCelebration();
-        }, 2000);
+        }, 3000);
     }
 
     showCelebration() {
@@ -258,23 +270,71 @@ class WomensDay2010Game {
         
         setInterval(() => {
             if (document.querySelector('.celebration-screen:not(.hidden)')) {
-                for (let i = 0; i < 3; i++) {
+                for (let i = 0; i < 5; i++) {
                     setTimeout(() => {
                         const sparkle = document.createElement('div');
                         sparkle.className = 'sparkle';
                         sparkle.style.left = Math.random() * 100 + '%';
                         sparkle.style.top = Math.random() * 100 + '%';
                         sparkle.style.animationDelay = Math.random() * 2 + 's';
+                        sparkle.style.animationDuration = (1.5 + Math.random() * 1) + 's';
                         
                         sparkleContainer.appendChild(sparkle);
                         
                         setTimeout(() => {
                             sparkle.remove();
-                        }, 2000);
-                    }, i * 200);
+                        }, 3000);
+                    }, i * 100);
                 }
             }
-        }, 3000);
+        }, 2000);
+    }
+
+    createScreenFlash() {
+        const flash = document.createElement('div');
+        flash.style.position = 'fixed';
+        flash.style.top = '0';
+        flash.style.left = '0';
+        flash.style.width = '100vw';
+        flash.style.height = '100vh';
+        flash.style.background = 'radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,215,0,0.6) 30%, transparent 70%)';
+        flash.style.zIndex = '9999';
+        flash.style.pointerEvents = 'none';
+        flash.style.animation = 'flash 1s ease-out forwards';
+        
+        document.body.appendChild(flash);
+        
+        setTimeout(() => {
+            flash.remove();
+        }, 1000);
+    }
+
+    createExplosionEffect() {
+        const explosionContainer = document.createElement('div');
+        explosionContainer.style.position = 'fixed';
+        explosionContainer.style.top = '50%';
+        explosionContainer.style.left = '50%';
+        explosionContainer.style.transform = 'translate(-50%, -50%)';
+        explosionContainer.style.zIndex = '9998';
+        explosionContainer.style.pointerEvents = 'none';
+        
+        for (let i = 0; i < 12; i++) {
+            const particle = document.createElement('div');
+            particle.style.position = 'absolute';
+            particle.style.width = '8px';
+            particle.style.height = '8px';
+            particle.style.background = `hsl(${Math.random() * 60 + 15}, 100%, 60%)`;
+            particle.style.borderRadius = '50%';
+            particle.style.animation = `explode${i} 2s ease-out forwards`;
+            
+            explosionContainer.appendChild(particle);
+        }
+        
+        document.body.appendChild(explosionContainer);
+        
+        setTimeout(() => {
+            explosionContainer.remove();
+        }, 2000);
     }
 
     playSound(audioElement) {
