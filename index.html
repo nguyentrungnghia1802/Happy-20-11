@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc mừng ngày Phụ nữ Việt Nam 20-10</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Màn hình chào mừng -->
+        <div id="welcome-screen" class="welcome-screen">
+            <h1 class="welcome-title">Chúc mừng ngày Phụ nữ Việt Nam</h1>
+            <p class="welcome-subtitle">Hãy sắp xếp các số để tạo thành ngày đặc biệt</p>
+            <button id="start-btn" class="start-btn">Bắt đầu</button>
+        </div>
+
+        <!-- Game screen -->
+        <div id="game-screen" class="game-screen hidden">
+            <div class="falling-numbers">
+                <div class="number falling" data-number="2">2</div>
+                <div class="number falling" data-number="0">0</div>
+                <div class="number falling" data-number="1">1</div>
+                <div class="number falling" data-number="0">0</div>
+            </div>
+
+            <div class="date-container">
+                <div class="date-slots">
+                    <div class="slot" data-position="0"></div>
+                    <div class="slot" data-position="1"></div>
+                    <span class="dash">-</span>
+                    <div class="slot" data-position="2"></div>
+                    <div class="slot" data-position="3"></div>
+                </div>
+            </div>
+
+            <div class="instruction">
+                <p>Kéo thả các số vào đúng vị trí để tạo thành 20-10</p>
+            </div>
+        </div>
+
+        <!-- Celebration screen -->
+        <div id="celebration-screen" class="celebration-screen hidden">
+            <div class="fire-animation">
+                <div class="flame flame1"></div>
+                <div class="flame flame2"></div>
+                <div class="flame flame3"></div>
+                <div class="flame flame4"></div>
+                <div class="flame flame5"></div>
+            </div>
+            
+            <div class="rose-container">
+                <div class="rose">
+                    <div class="rose-center"></div>
+                    <div class="petal petal1"></div>
+                    <div class="petal petal2"></div>
+                    <div class="petal petal3"></div>
+                    <div class="petal petal4"></div>
+                    <div class="petal petal5"></div>
+                    <div class="petal petal6"></div>
+                    <div class="petal petal7"></div>
+                    <div class="petal petal8"></div>
+                </div>
+                <div class="stem"></div>
+                <div class="leaf leaf1"></div>
+                <div class="leaf leaf2"></div>
+            </div>
+
+            <div class="message">
+                <h2 class="celebration-title">Chúc mừng ngày Phụ nữ Việt Nam 20-10</h2>
+                <p class="celebration-text">
+                    Gửi đến những người phụ nữ tuyệt vời,<br>
+                    Những đóa hoa đẹp nhất trong cuộc đời,<br>
+                    Mang theo yêu thương và hạnh phúc,<br>
+                    Chúc các chị em luôn rạng ngời!<br><br>
+                    Chúc mừng ngày 20-10! 🌹❤️
+                </p>
+            </div>
+
+            <div class="sparkles">
+                <div class="sparkle sparkle1"></div>
+                <div class="sparkle sparkle2"></div>
+                <div class="sparkle sparkle3"></div>
+                <div class="sparkle sparkle4"></div>
+                <div class="sparkle sparkle5"></div>
+                <div class="sparkle sparkle6"></div>
+                <div class="sparkle sparkle7"></div>
+                <div class="sparkle sparkle8"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio elements -->
+    <audio id="drop-sound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBzON1/nJaSEFJoTL8tyNOAgiZ7zn56N/Dw1Pqt/qmWoUBjOI2AjNdi8LLH7O7Np9Ofo/7eoxqYL+5+W3ogRJoPo4oGBmZmZ8TFnSAACCh4+FbF3dJiKt7ZBhNjVgMHDb2Ec+mtzyw3glBSyB0PLViToDGWi669SfTgwMUKb482ZdRYNE7/dLrRBCGPBv9v0mCjJeJBAbOZoAACpHGGOCwdGfgHGJJOAXaKmUe4y9n2Q9iqOhwQmgMRRdnUHpxKWhYREeFEgIANLNFhME3rAaKoW0Y5HyR3xp" type="audio/wav">
+    </audio>
+    
+    <audio id="success-sound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRuoCAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YcYCAAC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4QEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4" type="audio/wav">
+    </audio>
+
+    <audio id="celebration-music" preload="auto" loop>
+        <source src="data:audio/wav;base64,UklGRuoCAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YcYCAAC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4QEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4" type="audio/wav">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
