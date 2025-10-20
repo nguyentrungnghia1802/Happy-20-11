@@ -90,6 +90,9 @@ body {
     width: 100%;
     height: 100%;
     pointer-events: none;
+    padding: 0 20px;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .number {
@@ -103,6 +106,19 @@ body {
     user-select: none;
     z-index: 100;
     transition: all 0.3s ease;
+    touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    min-width: 60px;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
 }
 
 .number:active {
@@ -112,8 +128,11 @@ body {
 
 .number.dragging {
     z-index: 1000;
-    transform: scale(1.2);
-    opacity: 0.8;
+    transform: scale(1.1);
+    opacity: 0.9;
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.6);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    filter: brightness(1.1);
 }
 
 .falling {
@@ -122,17 +141,17 @@ body {
 
 @keyframes fall {
     0% {
-        transform: translateY(-100px) rotate(0deg);
+        transform: translateY(-120px) translateX(0) rotate(0deg);
         opacity: 0;
     }
     10% {
         opacity: 1;
     }
-    90% {
+    85% {
         opacity: 1;
     }
     100% {
-        transform: translateY(calc(100vh + 100px)) rotate(360deg);
+        transform: translateY(calc(100vh + 50px)) translateX(0) rotate(360deg);
         opacity: 0;
     }
 }
@@ -174,11 +193,29 @@ body {
     border-color: #ff6b6b;
     background: rgba(255, 107, 107, 0.2);
     transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+    animation: slotPulse 0.6s ease-in-out infinite alternate;
+}
+
+.slot.magnetic {
+    border-color: #ffd700;
+    background: rgba(255, 215, 0, 0.3);
+    transform: scale(1.1);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
 }
 
 .slot.filled {
     border-style: solid;
     background: rgba(255, 255, 255, 0.2);
+}
+
+@keyframes slotPulse {
+    0% {
+        box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 30px rgba(255, 107, 107, 0.7);
+    }
 }
 
 .slot.correct {
@@ -702,7 +739,7 @@ body {
     position: relative;
     z-index: 20;
     max-width: 600px;
-    margin: 0 auto;
+    margin: 0 auto 80px auto;
     animation: messageAppear 1s ease-out 3s both;
     background: rgba(0, 0, 0, 0.3);
     padding: 20px;
@@ -944,26 +981,33 @@ body {
     }
     
     .date-slots {
-        gap: 10px;
+        gap: 12px;
     }
     
     .slot {
-        width: 60px;
-        height: 60px;
-        font-size: 2rem;
+        width: 65px;
+        height: 65px;
+        font-size: 2.2rem;
+        border-width: 2px;
     }
     
     .dash {
-        font-size: 2rem;
+        font-size: 2.2rem;
     }
     
     .number {
-        font-size: 3rem;
+        font-size: 3.2rem;
+        min-width: 70px;
+        min-height: 70px;
     }
     
     .instruction {
         font-size: 1rem;
         padding: 0 20px;
+    }
+    
+    .falling-numbers {
+        padding: 0 15px;
     }
     
     .rose {
@@ -991,7 +1035,8 @@ body {
     }
     
     .message {
-        padding: 0 20px;
+        margin: 0 20px 80px 20px;
+        padding: 15px;
     }
 }
 
@@ -1001,21 +1046,28 @@ body {
     }
     
     .date-slots {
-        gap: 8px;
+        gap: 10px;
     }
     
     .slot {
-        width: 50px;
-        height: 50px;
-        font-size: 1.8rem;
+        width: 55px;
+        height: 55px;
+        font-size: 2rem;
+        border-width: 2px;
     }
     
     .dash {
-        font-size: 1.8rem;
+        font-size: 2rem;
     }
     
     .number {
-        font-size: 2.5rem;
+        font-size: 2.8rem;
+        min-width: 60px;
+        min-height: 60px;
+    }
+    
+    .falling-numbers {
+        padding: 0 10px;
     }
     
     .rose {
@@ -1039,5 +1091,17 @@ body {
     
     .celebration-text {
         font-size: 0.9rem;
+    }
+    
+    .message {
+        margin: 0 15px 80px 15px;
+        padding: 12px;
+    }
+    
+    .author-credit {
+        font-size: 0.8rem;
+        padding: 4px 8px;
+        left: 10px;
+        bottom: 10px;
     }
 }
