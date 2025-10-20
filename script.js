@@ -41,16 +41,52 @@ class WomensDay2010Game {
         this.slots.forEach(slot => {
             this.setupDropZone(slot);
         });
+        
+        // Reposition numbers on screen resize
+        window.addEventListener('resize', () => {
+            this.positionFallingNumbers();
+        });
+        
+        // Prevent context menu on long press (mobile)
+        document.addEventListener('contextmenu', (e) => {
+            if (e.target.classList.contains('number')) {
+                e.preventDefault();
+            }
+        });
     }
 
     positionFallingNumbers() {
         const numbers = document.querySelectorAll('.number');
-        const positions = [
-            { left: '15%', animationDelay: '0s' },
-            { left: '35%', animationDelay: '0.5s' },
-            { left: '65%', animationDelay: '1s' },
-            { left: '85%', animationDelay: '1.5s' }
-        ];
+        
+        // Responsive positioning based on screen size
+        const screenWidth = window.innerWidth;
+        let positions;
+        
+        if (screenWidth <= 480) {
+            // Mobile phones - tighter spacing
+            positions = [
+                { left: '12%', animationDelay: '0s' },
+                { left: '30%', animationDelay: '0.5s' },
+                { left: '55%', animationDelay: '1s' },
+                { left: '75%', animationDelay: '1.5s' }
+            ];
+        } else if (screenWidth <= 768) {
+            // Tablets - medium spacing  
+            positions = [
+                { left: '15%', animationDelay: '0s' },
+                { left: '32%', animationDelay: '0.5s' },
+                { left: '58%', animationDelay: '1s' },
+                { left: '78%', animationDelay: '1.5s' }
+            ];
+        } else {
+            // Desktop - original spacing
+            positions = [
+                { left: '20%', animationDelay: '0s' },
+                { left: '35%', animationDelay: '0.5s' },
+                { left: '55%', animationDelay: '1s' },
+                { left: '75%', animationDelay: '1.5s' }
+            ];
+        }
 
         numbers.forEach((number, index) => {
             const pos = positions[index];
@@ -74,58 +110,97 @@ class WomensDay2010Game {
     setupDragEvents(element) {
         let isDragging = false;
         let startX, startY, offsetX, offsetY;
+        let touchIdentifier = null;
 
         // Mouse events
         element.addEventListener('mousedown', (e) => {
             e.preventDefault();
-            this.startDrag(element, e.clientX, e.clientY);
-            isDragging = true;
+            e.stopPropagation();
             
             const rect = element.getBoundingClientRect();
             offsetX = e.clientX - rect.left;
             offsetY = e.clientY - rect.top;
+            
+            this.startDrag(element, e.clientX, e.clientY);
+            isDragging = true;
         });
 
         document.addEventListener('mousemove', (e) => {
             if (isDragging && this.draggedElement === element) {
-                this.updateDragPosition(e.clientX - offsetX, e.clientY - offsetY);
+                e.preventDefault();
+                const newX = e.clientX - offsetX;
+                const newY = e.clientY - offsetY;
+                
+                this.updateDragPosition(newX, newY);
                 this.highlightDropZone(e.clientX, e.clientY);
             }
         });
 
         document.addEventListener('mouseup', (e) => {
             if (isDragging && this.draggedElement === element) {
+                e.preventDefault();
                 this.endDrag(e.clientX, e.clientY);
                 isDragging = false;
             }
         });
 
-        // Touch events for mobile
+        // Enhanced Touch events for mobile
         element.addEventListener('touchstart', (e) => {
             e.preventDefault();
+            e.stopPropagation();
+            
             const touch = e.touches[0];
-            this.startDrag(element, touch.clientX, touch.clientY);
+            touchIdentifier = touch.identifier;
             
             const rect = element.getBoundingClientRect();
             offsetX = touch.clientX - rect.left;
             offsetY = touch.clientY - rect.top;
-        });
+            
+            this.startDrag(element, touch.clientX, touch.clientY);
+        }, { passive: false });
 
         document.addEventListener('touchmove', (e) => {
             if (this.draggedElement === element) {
                 e.preventDefault();
-                const touch = e.touches[0];
-                this.updateDragPosition(touch.clientX - offsetX, touch.clientY - offsetY);
-                this.highlightDropZone(touch.clientX, touch.clientY);
+                
+                // Find the correct touch point
+                let touch = null;
+                for (let i = 0; i < e.touches.length; i++) {
+                    if (e.touches[i].identifier === touchIdentifier) {
+                        touch = e.touches[i];
+                        break;
+                    }
+                }
+                
+                if (touch) {
+                    const newX = touch.clientX - offsetX;
+                    const newY = touch.clientY - offsetY;
+                    
+                    this.updateDragPosition(newX, newY);
+                    this.highlightDropZone(touch.clientX, touch.clientY);
+                }
             }
-        });
+        }, { passive: false });
 
         document.addEventListener('touchend', (e) => {
             if (this.draggedElement === element) {
-                const touch = e.changedTouches[0];
-                this.endDrag(touch.clientX, touch.clientY);
+                e.preventDefault();
+                
+                // Find the correct touch point in changedTouches
+                let touch = null;
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    if (e.changedTouches[i].identifier === touchIdentifier) {
+                        touch = e.changedTouches[i];
+                        break;
+                    }
+                }
+                
+                if (touch) {
+                    this.endDrag(touch.clientX, touch.clientY);
+                }
+                touchIdentifier = null;
             }
-        });
+        }, { passive: false });
     }
 
     startDrag(element, x, y) {
@@ -137,25 +212,93 @@ class WomensDay2010Game {
         element.style.zIndex = '1000';
         element.style.pointerEvents = 'none';
         element.style.animation = 'none';
+        element.style.transition = 'transform 0.2s ease';
         
-        this.updateDragPosition(x - 30, y - 30); // Center the element on cursor
+        // Get element dimensions for better centering
+        const rect = element.getBoundingClientRect();
+        const centerOffsetX = rect.width / 2;
+        const centerOffsetY = rect.height / 2;
+        
+        this.updateDragPosition(x - centerOffsetX, y - centerOffsetY);
     }
 
     updateDragPosition(x, y) {
         if (this.draggedElement) {
-            this.draggedElement.style.left = x + 'px';
-            this.draggedElement.style.top = y + 'px';
+            // Lấy kích thước phần tử và viewport
+            const elementRect = this.draggedElement.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const elementWidth = elementRect.width;
+            const elementHeight = elementRect.height;
+            
+            // Giới hạn vị trí trong khung hình với padding 10px
+            const padding = 10;
+            const constrainedX = Math.max(padding, Math.min(x, viewportWidth - elementWidth - padding));
+            const constrainedY = Math.max(padding, Math.min(y, viewportHeight - elementHeight - padding));
+            
+            this.draggedElement.style.left = constrainedX + 'px';
+            this.draggedElement.style.top = constrainedY + 'px';
         }
     }
 
     highlightDropZone(x, y) {
         // Remove previous highlights
-        this.slots.forEach(slot => slot.classList.remove('highlight'));
+        this.slots.forEach(slot => {
+            slot.classList.remove('highlight', 'magnetic');
+        });
         
-        // Find slot under cursor
-        const elementBelow = document.elementFromPoint(x, y);
-        if (elementBelow && elementBelow.classList.contains('slot')) {
-            elementBelow.classList.add('highlight');
+        // Find closest slot with magnetic effect
+        let closestSlot = null;
+        let closestDistance = Infinity;
+        const magneticRadius = 80; // Radius for magnetic effect
+        
+        this.slots.forEach(slot => {
+            if (slot.textContent.trim()) return; // Skip filled slots
+            
+            const slotRect = slot.getBoundingClientRect();
+            const slotCenterX = slotRect.left + slotRect.width / 2;
+            const slotCenterY = slotRect.top + slotRect.height / 2;
+            
+            const distance = Math.sqrt(
+                Math.pow(x - slotCenterX, 2) + Math.pow(y - slotCenterY, 2)
+            );
+            
+            if (distance < magneticRadius && distance < closestDistance) {
+                closestDistance = distance;
+                closestSlot = slot;
+            }
+        });
+        
+        // Highlight closest slot if within range
+        if (closestSlot) {
+            closestSlot.classList.add('highlight');
+            
+            // Add magnetic effect if very close
+            if (closestDistance < 50) {
+                closestSlot.classList.add('magnetic');
+                
+                // Magnetic snap effect for dragged element
+                if (this.draggedElement && closestDistance < 30) {
+                    const slotRect = closestSlot.getBoundingClientRect();
+                    const slotCenterX = slotRect.left + slotRect.width / 2;
+                    const slotCenterY = slotRect.top + slotRect.height / 2;
+                    
+                    const elementRect = this.draggedElement.getBoundingClientRect();
+                    const newX = slotCenterX - elementRect.width / 2;
+                    const newY = slotCenterY - elementRect.height / 2;
+                    
+                    this.draggedElement.style.left = newX + 'px';
+                    this.draggedElement.style.top = newY + 'px';
+                    this.draggedElement.style.transform = 'scale(0.9)';
+                }
+            }
+        }
+        
+        // Reset transform if no magnetic effect
+        if (!closestSlot || closestDistance >= 30) {
+            if (this.draggedElement) {
+                this.draggedElement.style.transform = 'scale(1.1)';
+            }
         }
     }
 
@@ -379,9 +522,14 @@ class WomensDay2010Game {
             this.draggedElement.classList.remove('dragging');
             this.draggedElement.style.pointerEvents = '';
             this.draggedElement.style.zIndex = '';
+            this.draggedElement.style.transition = '';
+            this.draggedElement.style.transform = '';
         }
         
-        this.slots.forEach(slot => slot.classList.remove('highlight'));
+        this.slots.forEach(slot => {
+            slot.classList.remove('highlight', 'magnetic');
+        });
+        
         this.draggedElement = null;
         this.draggedNumber = null;
     }
