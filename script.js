@@ -22,6 +22,9 @@ class WomensDay2010Game {
         this.dropSound = document.getElementById('drop-sound');
         this.successSound = document.getElementById('success-sound');
         this.celebrationMusic = document.getElementById('celebration-music');
+        this.bgMusic = document.getElementById('bg-music');
+        this.backgroundMusic = document.getElementById('background-music');
+        this.backgroundMusic = document.getElementById('background-music');
         
         this.positionFallingNumbers();
     }
@@ -261,6 +264,17 @@ class WomensDay2010Game {
         this.celebrationMusic.volume = 0.3;
         this.playSound(this.celebrationMusic);
         
+        // Play background MP3 music after message appears
+        setTimeout(() => {
+            const bgMusic = document.getElementById('bg-music');
+            if (bgMusic) {
+                bgMusic.volume = 0.2;
+                bgMusic.play().catch(e => {
+                    console.log('Background music play failed:', e);
+                });
+            }
+        }, 4000);
+        
         // Create additional sparkle effects
         this.createSparkleEffects();
     }
@@ -325,16 +339,14 @@ class WomensDay2010Game {
             particle.style.height = '8px';
             particle.style.background = `hsl(${Math.random() * 60 + 15}, 100%, 60%)`;
             particle.style.borderRadius = '50%';
-            particle.style.animation = `explode${i} 2s ease-out forwards`;
-            
+            // Tăng thời gian explosion lên 3 lần (6s)
+            particle.style.animation = `explode${i} 6s ease-out forwards`;
             explosionContainer.appendChild(particle);
         }
-        
         document.body.appendChild(explosionContainer);
-        
         setTimeout(() => {
             explosionContainer.remove();
-        }, 2000);
+        }, 6000);
     }
 
     playSound(audioElement) {
@@ -342,6 +354,22 @@ class WomensDay2010Game {
             audioElement.currentTime = 0;
             audioElement.play().catch(e => {
                 console.log('Audio play prevented:', e);
+            });
+        }
+    }
+
+    playBackgroundMusic() {
+        const backgroundMusic = document.getElementById('background-music');
+        if (backgroundMusic) {
+            backgroundMusic.volume = 0.2; // Volume nhẹ nhàng
+            backgroundMusic.play().catch(e => {
+                console.log('Background music play prevented:', e);
+                // Fallback: thử phát nhạc celebration thay thế
+                const celebMusic = document.getElementById('celebration-music');
+                if (celebMusic) {
+                    celebMusic.volume = 0.1;
+                    celebMusic.play().catch(() => {});
+                }
             });
         }
     }
